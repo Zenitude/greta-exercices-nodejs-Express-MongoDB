@@ -1,6 +1,6 @@
 const db = require("../models");
 
-const tutorial = db.tutorial;
+const Tutorial = db.tutorial;
 
 // Créer et enregistrer un nouveau tutoriel
 exports.create = (request, response) => 
@@ -13,11 +13,11 @@ exports.create = (request, response) =>
     }
 
     // Créer un tutoriel
-    const tutorial = new tutorial(
+    const tutorial = new Tutorial(
     {
         title: request.body.title,
         description: request.body.description,
-        published: request.body.publie ? request.body.published : false
+        published: request.body.published ? request.body.published : false
     })
 
     // Sauvegarder le tutoriel dans la base de données
@@ -41,9 +41,9 @@ exports.findAll = (request, response) =>
 {
     const title = request.body.title;
 
-    let condition = title ? { title : { $regex : new RegExp(title), $option: "i" }} : {}
+    let condition = title ? { title : { $regex : new RegExp(title), $option: "i" }} : {};
 
-    tutorial.find(condition)
+    Tutorial.find(condition)
     .then(donnees =>
     {
         response.send(donnees);
@@ -63,7 +63,7 @@ exports.findOne = (request, response) =>
 {
     const id = request.params.id;
 
-    tutorial.findById(id)
+    Tutorial.findById(id)
     .then(donnees =>
     {
         if(!donnees)
@@ -93,7 +93,7 @@ exports.update = (request, response) =>
 
     const id = request.params.id;
 
-    tutorial.findByIdAndUpdate(id, request.body, {useFindAndModify: false})
+    Tutorial.findByIdAndUpdate(id, request.body, {useFindAndModify: false})
         .then(donnees =>
         {
             if(!donnees)
@@ -116,7 +116,7 @@ exports.delete = (request, response) =>
 {
     const id = request.params.id;
 
-    tutorial.findByIdAndRemove(id)
+    Tutorial.findByIdAndRemove(id)
         .then(donnees =>
         {
             if(!donnees)
@@ -137,7 +137,7 @@ exports.delete = (request, response) =>
 // Supprimer tous les tutoriels publiés
 exports.deleteAll = (request, response) => 
 {
-    tutorial.deleteMany({})
+    Tutorial.deleteMany({})
         .then(donnees =>
         {
             response.send({message: `${donnees.deletedCount} Les tutoriels ont été supprimés avec succès.`})
@@ -151,7 +151,7 @@ exports.deleteAll = (request, response) =>
 // Trouver tous les tutoriels publiés
 exports.findAllPublished = (request, response) => 
 {
-    tutorial.find({publie: true})
+    tutorial.find({published: true})
         .then(donnees =>
         {
             response.send(donnees);

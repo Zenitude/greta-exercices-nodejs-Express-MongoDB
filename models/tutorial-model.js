@@ -1,10 +1,19 @@
-const mongoose = require('mongoose');
+module.exports = mongoose => {
+  let tutoSchema = mongoose.Schema(
+    {
+      title: { type: String },
+      description: { type: String },
+      published: { type: Boolean },
+    },
+    { timestamps: true }
+  );
 
-const tutoSchema = mongoose.Schema(
-{
-  title: { type: String, required: true },
-  description: { type: String, required: true },
-  published: { type: Boolean, required: true },
-});
+  tutoSchema.method("toJSON", function() {
+    const { __v, _id, ...object } = this.toObject();
+    object.id = _id;
+    return object;
+  });
 
-module.exports = mongoose.model('tutorial', tutoSchema);
+  const Tutorial = mongoose.model("tutorial", tutoSchema);
+  return Tutorial;
+};
